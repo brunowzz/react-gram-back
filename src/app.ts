@@ -19,3 +19,5 @@ app.use("/uploads", uploadDirectory);
 app.listen(port, () => {
   console.log("App Rodando na porta " + port);
 });
+
+export default app;
