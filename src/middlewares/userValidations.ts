@@ -24,3 +24,18 @@ export function userCreateValidation() {
     body("bio").optional().isString().withMessage("Bio must be a string."),
   ];
 }
+
+export function userLoginValidation() {
+  return [
+    body("email")
+      .exists()
+      .withMessage("Email is required.")
+      .isEmail()
+      .withMessage("Email must be valid."),
+    body("password")
+      .exists()
+      .withMessage("Password is required.")
+      .isLength({ min: 6 })
+      .withMessage("Password must be at least 6 characters long."),
+  ];
+}
