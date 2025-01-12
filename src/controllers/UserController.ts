@@ -5,6 +5,7 @@ import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import mongoose, { Types } from "mongoose";
 import { hashPassword } from "../utils/hashPassword";
+import { getUser } from "../utils/getUser";
 
 const jwtSecret = process.env.JWT_SECRET;
 
@@ -91,12 +92,9 @@ export async function getCurrentUser(
 export async function update(req: Request, res: Response): Promise<void> {
   const { name, password, bio } = req.body;
   const profileImage = req.file ? req.file.filename : null;
-  const reqUser = req.user;
 
   try {
-    const user = await User.findById(
-      new mongoose.Types.ObjectId(reqUser)
-    ).select("-password");
+    const user = await getUser(req);
 
     if (!user) {
       res.status(404).json({ errors: ["User not found."] });
@@ -115,5 +113,19 @@ export async function update(req: Request, res: Response): Promise<void> {
     res.status(200).json(user);
   } catch (error) {
     res.status(500).json({ errors: ["An error occurred during the update."] });
+  }
+}
+
+export async function getUserById(req: Request, res: Response): Promise<void> {
+  const { id } = req.params;
+
+  try {
+    const user = await User.findById(new mongoose.Types.ObjectId(id)).select(
+      "-password"
+    );
+
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(404).json({ errors: ["User not found."] });
   }
 }
