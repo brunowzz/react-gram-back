@@ -2,7 +2,7 @@ import multer from "multer";
 import path from "path";
 
 const folders = {
-  user: "users",
+  users: "users",
   photos: "photos",
 };
 
@@ -11,7 +11,7 @@ const imageStorage = multer.diskStorage({
     const folder =
       Object.keys(folders).find((key) => req.baseUrl.includes(key)) || "users";
 
-    cb(null, `uploads/${folder}/`);
+    cb(null, `src/uploads/${folder}/`);
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + path.extname(file.originalname));
