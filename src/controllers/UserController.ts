@@ -78,3 +78,12 @@ export async function login(req: Request, res: Response): Promise<void> {
     res.status(500).json({ errors: ["An error occurred during login."] });
   }
 }
+
+export async function getCurrentUser(
+  req: Request,
+  res: Response
+): Promise<void> {
+  const user = req.user;
+
+  res.status(200).json(user);
+}

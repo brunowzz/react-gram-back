@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import "../types/express"; // Import the extended Request interface
+import "../types/express";
 import User from "../models/User";
 import jwt from "jsonwebtoken";
 
