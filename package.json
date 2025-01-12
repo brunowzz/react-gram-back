@@ -1,12 +1,11 @@
 {
   "name": "react-gram-back",
   "version": "1.0.0",
-  "main": "index.js",
-  "type": "module",
+  "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon src/app.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "start": "node dist/app.js",
+    "dev": "nodemon src/app.ts"
   },
   "keywords": [],
   "author": "",
