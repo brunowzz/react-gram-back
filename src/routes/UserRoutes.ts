@@ -1,6 +1,7 @@
 import express from "express";
 import {
   getCurrentUser,
+  getUserById,
   login,
   register,
   update,
@@ -27,5 +28,6 @@ router.put(
   imageUpload.single("profileImage"),
   update
 );
+router.get("/:id", getUserById);
 
 export default router;

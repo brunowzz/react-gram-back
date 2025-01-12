@@ -1,5 +1,6 @@
 import multer from "multer";
 import path from "path";
+import { randomUUID } from "node:crypto";
 
 const folders = {
   users: "users",
@@ -14,7 +15,7 @@ const imageStorage = multer.diskStorage({
     cb(null, `src/uploads/${folder}/`);
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
+    cb(null, randomUUID() + path.extname(file.originalname));
   },
 });
 
