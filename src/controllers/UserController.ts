@@ -47,3 +47,34 @@ export async function register(req: Request, res: Response): Promise<void> {
       .json({ errors: ["An error occurred during registration."] });
   }
 }
+
+export async function login(req: Request, res: Response): Promise<void> {
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      res.status(404).json({ errors: ["User not found."] });
+      return;
+    }
+
+    const isPasswordValid = await bcrypt.compare(
+      password,
+      user?.password as string
+    );
+
+    if (!isPasswordValid) {
+      res.status(422).json({ errors: ["Email and password do not match."] });
+      return;
+    }
+
+    res.status(200).json({
+      _id: user._id,
+      profileImage: user.profileImage,
+      token: generateToken(user._id),
+    });
+  } catch (error) {
+    res.status(500).json({ errors: ["An error occurred during login."] });
+  }
+}
