@@ -57,7 +57,7 @@ export async function getAllPhotos(req: Request, res: Response): Promise<void> {
       .exec();
     res.status(200).json(photos);
   } catch (error) {
-    res.status(500).json({ errors: ["Internal error server"] });
+    res.status(500).json({ errors: ["Interval server error."] });
   }
 }
 
@@ -117,6 +117,37 @@ export async function updatePhoto(req: Request, res: Response): Promise<void> {
 
     res.status(200).json(photo);
   } catch (error) {
-    res.status(500).json({ errors: ["Internal error server"] });
+    res.status(500).json({ errors: ["Interval server error."] });
+  }
+}
+
+export async function likePhoto(req: Request, res: Response): Promise<void> {
+  const { id } = req.params;
+  const reqUser = req.user;
+
+  try {
+    const photo = await Photo.findById(id);
+
+    if (!photo) {
+      res.status(404).json({ errors: ["Photo not found."] });
+      return;
+    }
+
+    if (photo.likes.includes(reqUser._id)) {
+      res.status(422).json({ errors: ["You have already liked this photo."] });
+      return;
+    }
+
+    photo.likes.push(reqUser._id);
+
+    photo.save();
+
+    res.status(200).json({
+      photoId: id,
+      userId: reqUser._id,
+      message: "Photo has been liked.",
+    });
+  } catch (error) {
+    res.status(500).json({ errors: ["Interval server error."] });
   }
 }
