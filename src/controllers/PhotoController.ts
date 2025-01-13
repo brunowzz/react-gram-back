@@ -49,3 +49,14 @@ export async function deletePhoto(req: Request, res: Response): Promise<void> {
     res.status(500).json({ errors: ["Failed to delete photo"] });
   }
 }
+
+export async function getAllPhotos(req: Request, res: Response): Promise<void> {
+  try {
+    const photos = await Photo.find({})
+      .sort([["createdAt", -1]])
+      .exec();
+    res.status(200).json(photos);
+  } catch (error) {
+    res.status(500).json({ errors: ["Internal error server"] });
+  }
+}
