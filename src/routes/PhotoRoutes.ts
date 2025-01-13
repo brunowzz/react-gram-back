@@ -5,6 +5,7 @@ import { validate } from "../middlewares/handleValidation";
 import {
   deletePhoto,
   getAllPhotos,
+  getUserPhotos,
   insertPhoto,
 } from "../controllers/PhotoController";
 import { imageUpload } from "../middlewares/imageUpload";
@@ -21,5 +22,6 @@ router.post(
 );
 router.delete("/:id", authGuard, deletePhoto);
 router.get("/", authGuard, getAllPhotos);
+router.get("/user/:id", authGuard, getUserPhotos);
 
 export default router;

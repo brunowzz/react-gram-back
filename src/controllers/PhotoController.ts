@@ -60,3 +60,20 @@ export async function getAllPhotos(req: Request, res: Response): Promise<void> {
     res.status(500).json({ errors: ["Internal error server"] });
   }
 }
+
+export async function getUserPhotos(
+  req: Request,
+  res: Response
+): Promise<void> {
+  try {
+    const { id } = req.params;
+
+    const photos = await Photo.find({ userId: id })
+      .sort([["createdAt", -1]])
+      .exec();
+
+    res.status(200).json(photos);
+  } catch (error) {
+    res.status(500).json({ errors: ["Failed to retrieve user photos"] });
+  }
+}
