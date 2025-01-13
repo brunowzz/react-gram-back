@@ -21,3 +21,16 @@ export function photoValidation() {
     }),
   ];
 }
+
+export function photoUpdateValidation() {
+  return [
+    body("title")
+      .optional()
+      .notEmpty()
+      .withMessage("Title cannot be empty")
+      .isString()
+      .withMessage("Title must be a string")
+      .isLength({ min: 3 })
+      .withMessage("Title must be at least 3 characters long"),
+  ];
+}

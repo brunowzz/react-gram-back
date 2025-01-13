@@ -88,3 +88,35 @@ export async function getPhotoById(req: Request, res: Response): Promise<void> {
     res.status(404).json({ errors: ["Photo is not found."] });
   }
 }
+
+export async function updatePhoto(req: Request, res: Response): Promise<void> {
+  const { id } = req.params;
+  const { title } = req.body;
+  const reqUser = req.user;
+
+  try {
+    const photo: any = await Photo.findById(new mongoose.Types.ObjectId(id));
+
+    if (!photo) {
+      res.status(404).json({ errors: ["Photo not found."] });
+      return;
+    }
+
+    if (!photo.userId.equals(reqUser._id)) {
+      res.status(403).json({
+        errors: ["You do not have permission to delete this photo."],
+      });
+      return;
+    }
+
+    if (title) {
+      photo.title = title;
+    }
+
+    await photo.save();
+
+    res.status(200).json(photo);
+  } catch (error) {
+    res.status(500).json({ errors: ["Internal error server"] });
+  }
+}
