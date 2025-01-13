@@ -77,3 +77,14 @@ export async function getUserPhotos(
     res.status(500).json({ errors: ["Failed to retrieve user photos"] });
   }
 }
+
+export async function getPhotoById(req: Request, res: Response): Promise<void> {
+  const { id } = req.params;
+
+  try {
+    const photo = await Photo.findById(new mongoose.Types.ObjectId(id));
+    res.status(200).json(photo);
+  } catch (error) {
+    res.status(404).json({ errors: ["Photo is not found."] });
+  }
+}
