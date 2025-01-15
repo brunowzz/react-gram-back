@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { getUser } from "../utils/getUser";
 import Photo from "../models/Photo";
 import mongoose from "mongoose";
+import User from "../models/User";
 
 export async function insertPhoto(req: Request, res: Response): Promise<void> {
   const { title } = req.body;
@@ -57,7 +58,7 @@ export async function getAllPhotos(req: Request, res: Response): Promise<void> {
       .exec();
     res.status(200).json(photos);
   } catch (error) {
-    res.status(500).json({ errors: ["Interval server error."] });
+    res.status(500).json({ errors: ["Internal server error."] });
   }
 }
 
@@ -117,7 +118,7 @@ export async function updatePhoto(req: Request, res: Response): Promise<void> {
 
     res.status(200).json(photo);
   } catch (error) {
-    res.status(500).json({ errors: ["Interval server error."] });
+    res.status(500).json({ errors: ["Internal server error."] });
   }
 }
 
@@ -148,6 +149,40 @@ export async function likePhoto(req: Request, res: Response): Promise<void> {
       message: "Photo has been liked.",
     });
   } catch (error) {
-    res.status(500).json({ errors: ["Interval server error."] });
+    res.status(500).json({ errors: ["Internal server error."] });
+  }
+}
+
+export async function commentPhoto(req: Request, res: Response): Promise<void> {
+  const { id } = req.params;
+  const { comment } = req.body;
+  const reqUser = req.user;
+
+  try {
+    const user = await User.findById(reqUser._id);
+    const photo = await Photo.findById(id);
+
+    if (!photo) {
+      res.status(404).json({ errors: ["Photo is not found."] });
+      return;
+    }
+
+    const userComment = {
+      comment,
+      userName: user?.name,
+      userImage: user?.profileImage,
+      userId: user?._id,
+    };
+
+    photo.comments.push(userComment);
+
+    await photo.save();
+
+    res.status(200).json({
+      comment: userComment,
+      message: "Comment has been successfully saved.",
+    });
+  } catch (error) {
+    res.status(500).json({ errors: ["Internal server error."] });
   }
 }
