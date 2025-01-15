@@ -34,3 +34,15 @@ export function photoUpdateValidation() {
       .withMessage("Title must be at least 3 characters long"),
   ];
 }
+
+export function commentValidation() {
+  return [
+    body("comment")
+      .notEmpty()
+      .withMessage("Comment cannot be empty")
+      .isString()
+      .withMessage("Comment must be a string")
+      .isLength({ min: 1 })
+      .withMessage("Comment must be at least 1 character long"),
+  ];
+}
