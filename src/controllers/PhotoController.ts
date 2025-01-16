@@ -186,3 +186,19 @@ export async function commentPhoto(req: Request, res: Response): Promise<void> {
     res.status(500).json({ errors: ["Internal server error."] });
   }
 }
+
+export async function searchPhotos(req: Request, res: Response): Promise<void> {
+  const { q } = req.query;
+
+  if (!q) {
+    res.status(400).json({ errors: ["Query parameter is required."] });
+    return;
+  }
+
+  try {
+    const photos = await Photo.find({});
+    res.status(200).json(photos);
+  } catch (error) {
+    res.status(500).json({ errors: ["Failed to search photos"] });
+  }
+}
